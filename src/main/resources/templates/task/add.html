@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>タスクを追加</title>
+</head>
+
+<body>
+	<h1>タスクを追加</h1>
+	
+	<form th:action="@{/task/add/submit}" method="post">
+		<div>
+			名前(必須)：
+			<input type="text" id="name" name="name" />
+		</div>
+		<div>
+			進捗率(0～100)：
+			<input type="number" id="progress" name="progress" />
+		</div>
+		<div>
+			完了日：
+			<input type="date" id="finishedAt" name="finishedAt" />
+		</div>
+		<button type="submit">追加</button>
+	</form>
+	
+	<p>
+		<a th:href="@{/home}">戻る</a>
+	</p>
+	
+	<!--/* タスク追加時に、入力内容に問題があった時 */-->
+	<div th:if="${result == 0}">
+		入力内容を確認してください。<br>
+		<span th:text="'対象項目:' + ${msg}">○○○○ ○○○○ ○○○○</span>
+	</div>
+	<!--/* タスク追加時にエラーになった時 */-->
+	<div th:if="${result == -1}" style="color: red;">
+		システムエラーが発生しました。<span th:text="'コード:' + ${msg}">コード:ERR_XXX_XXX</span><br>
+		復旧しない場合は、ヘルプデスクまでご連絡ください。<br>
+	</div>
+
+</body>
+</html>

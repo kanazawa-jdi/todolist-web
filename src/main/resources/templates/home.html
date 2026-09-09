@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>タスクリスト</title>
+</head>
+
+
+<script th:inline="javascript">
+	function OnClickAll() {
+		/* 全タスク表示 */
+		switchTasksList('all');
+	}
+	function OnClickUnfinish() {
+		/* 未完了タスク表示 */
+		switchTasksList('Unfinish');
+	}
+	function OnClickFinish() {
+		/* 完了済タスク表示 */
+		switchTasksList('Finish');
+	}
+	function switchTasksList(type){
+		/* 一度全ての見出しタイトル・タスクを非表示にする */
+		document.querySelectorAll('.task-list').forEach(element => {
+			element.style.display = 'none';
+		});
+		
+		/* 表示したいタイトル・タスクのみ表示に切り替える */
+		document.querySelectorAll(`.task-list-${type}`).forEach(element => {
+			/* 'block'にした場合、<td>の表示位置が<th>とずれてしまうため空文字を代入 */
+			element.style.display = '';
+		});
+	}
+</script>
+
+<body>
+	<h1 class="task-list task-list-all">全てのタスク</h1>
+	<h1 class="task-list task-list-Unfinish" style="display: none;">未完了タスク</h1>
+	<h1 class="task-list task-list-Finish" style="display: none;">完了済タスク</h1>
+	
+	
+	<p>
+		表示するタスク：
+		<a href="#" onclick="OnClickUnfinish(); return false;">未完了</a>・
+		<a href="#" onclick="OnClickFinish(); return false;">完了</a>・
+		<a href="#" onclick="OnClickAll(); return false;">全て</a>
+	</p>
+	
+	<p>
+		<a th:href="@{/task/add}">タスクを追加</a>　
+	</p>
+	
+	<!--/* homeを呼び出してタスク情報の取得で成功時。またはhome呼び出し以外の時、タスク一覧を表示 */-->
+	<div th:if="${result == 1} or ${action != 'home'}">
+		<table>
+			<thead>
+				<tr><th>名前</th><th>進捗率</th><th>完了日</th><th><!--/* ボタン */--></th></tr>
+			</thead>
+			
+			<tbody>
+				<!--/* 完了日がnullの場合、Unfinishクラスを追加。完了日がある場合はFinishクラスを追加 */-->
+				<tr th:each="task : ${tasks}" 
+				th:class="${task.finishedAt == null} ? 'task-list task-list-all task-list-Unfinish' : 'task-list task-list-all task-list-Finish'">
+				
+					<!--/* タスク情報 */-->
+					<td th:text="${task.name}">名前○○○○○○○○</td>
+					<td th:text="${task.progress} + '％'">XXX％</td>
+					<td th:text="${task.finishedAt}">YYYY/MM/DD</td>
+					
+					<!--/* ボタン */-->
+					<td>
+						<form th:action="@{/task/action}" method="post">
+							<!--/* タスクのid */-->
+							<input type="hidden" name="id" th:value="${task.id}">
+							
+							<!--/* 完了日がない場合は完了ボタンを表示する、ある場合は未完了ボタンを表示 */-->
+							<span th:if="${task.finishedAt} == null">
+								<button type="submit" name="action" value="finish">完　了</button>
+							</span>
+							<span th:unless="${task.finishedAt} == null">
+								<button type="submit" name="action" value="unfinish">未完了</button>
+							</span>
+							
+							<!--/* 変更・削除ボタン */-->
+							<button type="submit" name="action" value="detail">変更</button>
+							<button type="submit" name="action" value="del">削除</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<!--/* homeを実行して、結果がFAILUREの時（データがなかった時） */-->
+	<div th:if="${result == 0 } and ${action == 'home' } ">
+		タスクが登録されていません。
+	</div>
+	
+	<!--/* delを呼び出して、FAILUREの時 */-->
+	<!--/* delは ERRORとSUCCESSのみのため処理不要 */-->
+	
+	<!--/* 処理の結果、エラーになった時 */-->
+	<div th:if="${result == -1}" style="color: red;">
+		システムエラーが発生しました。<span th:text="'コード:' + ${msg}">コード:ERR_XXX_XXX</span><br>
+		復旧しない場合は、ヘルプデスクまでご連絡ください。<br>
+	</div>
+	
+	
+</body>
+</html>
+<!--/*
+	resultの意味
+	SUCCESS: 1
+	FAILURE: 0
+	ERROR  :-1
+*/-->

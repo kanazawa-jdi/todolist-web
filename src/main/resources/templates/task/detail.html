@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>タスク詳細</title>
+</head>
+
+<body>
+	<h1>タスク詳細</h1>
+	
+	<form th:action="@{/task/detail/submit}" method="post">
+		<input type="hidden" name="id" th:value="${task.id}">
+		<div>
+			名前(必須)：
+			<input type="text" id="name" name="name" th:value="${task.name}" value="名前○○○○○○名前" />
+		</div>
+		<div>
+			進捗率(0～100)：
+			<input type="number" id="progress" name="progress" th:value="${task.progress}" value="100" />
+		</div>
+		<div>
+			完了日：
+			<input type="date" id="finishedAt" name="finishedAt" th:value="${task.finishedAt}" value="2222-12-31" />
+		</div>
+		<button type="submit">変更</button>
+	</form>
+	
+	<p>
+		<a th:href="@{/home}">戻る</a>
+	</p>
+	
+	<!--/* 変更時に、入力内容に問題があった時 */-->
+	<div th:if="${result == 0}">
+		入力内容を確認してください。<br>
+		<span th:text="'対象項目:' + ${msg}">○○○○ ○○○○ ○○○○</span>
+	</div>
+	<!--/* 変更時にエラーになった時 */-->
+	<div th:if="${result == -1}" style="color: red;">
+		システムエラーが発生しました。<span th:text="'コード:' + ${msg}">コード:ERR_XXX_XXX</span><br>
+		復旧しない場合は、ヘルプデスクまでご連絡ください。<br>
+	</div>
+
+</body>
+</html>
