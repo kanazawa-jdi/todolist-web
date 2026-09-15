@@ -32,12 +32,17 @@
 			element.style.display = '';
 		});
 	}
+	/* 画面描画前に発生するイベント */
+	window.addEventListener('DOMContentLoaded', function () {
+		/* home画面読み込み後は未完了タスクのみ表示する */
+		OnClickUnfinish();
+	        });
 </script>
 
 <body>
 	<h1 class="task-list task-list-all">全てのタスク</h1>
-	<h1 class="task-list task-list-Unfinish" style="display: none;">未完了タスク</h1>
-	<h1 class="task-list task-list-Finish" style="display: none;">完了済タスク</h1>
+	<h1 class="task-list task-list-Unfinish">未完了タスク</h1>
+	<h1 class="task-list task-list-Finish">完了済タスク</h1>
 	
 	
 	<p>
@@ -55,7 +60,13 @@
 	<div th:if="${result == 1} or ${action != 'home'}">
 		<table>
 			<thead>
-				<tr><th>名前</th><th>進捗率</th><th>完了日</th><th><!--/* ボタン */--></th></tr>
+				<!--/* 列名 */-->
+				<tr><th>名前</th><th>進捗率</th><th><!--/* ボタン */--></th></tr>
+
+				<!--/* 列名（完了日あり） */-->
+				<!--/*
+				<tr><th>名前</th><th>進捗率</th><th style="display: none;">完了日</th><th></th></tr>
+				*/-->
 			</thead>
 			
 			<tbody>
@@ -66,7 +77,11 @@
 					<!--/* タスク情報 */-->
 					<td th:text="${task.name}">名前○○○○○○○○</td>
 					<td th:text="${task.progress} + '％'">XXX％</td>
-					<td th:text="${task.finishedAt}">YYYY/MM/DD</td>
+					
+					<!--/* 完了日は一覧でユーザーに見せる必要がないため削除 */-->
+					<!--/* 
+					<td th:text="${task.finishedAt}" style="display: none;">YYYY/MM/DD</td>
+					*/-->
 					
 					<!--/* ボタン */-->
 					<td>
