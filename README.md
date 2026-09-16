@@ -11,20 +11,52 @@ Javaの再履修、フレームワーク（Spring Framework・SpringBoot）学�
 - 表示するタスクを　未完了・完了済・全て　の三種類に切り替えれます。
 - ユーザー関連の機能はありません。誰が閲覧しても全てのタスクが表示されます。
 
-## インストール
-開発途中のため未検討です。
+![screenshot](imgs\home.png)
+![screenshot](imgs\detail.png)
+![screenshot](imgs\home.png)
 
-### データベース
-PostgreSQLにて以下のSQLを実行してテーブルを作成しています。
+## セットアップ
+Renderによるセットアップ方法は以下の通りです。
 
-```sql:01_init.sql
-CREATE TABLE IF NOT EXISTS tasks(
-id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-name TEXT,
-finishedAt DATE,
-progress smallint DEFAULT 0 NOT NULL
-);
+### WEBサービスを作成
+1. ダッシュボードから「＋New」の「Web Service」を選択
+2. 「Public Git Repository」を選び、このリポジトリのURLを入力して「Connect」をクリック
+3. 以下の設定項目を入力して「Deploy web service」をクリック
+    - Name：　お好みで設定
+    - Language：　Docker
+    - Region：　お好みの地域
+    - Compute：　$0/month　※Freeプラン
+    - Environment Variables:　※後ほど指定します
+
+### PostgreSQLのDBサーバーを作成
+1. ダッシュボードから「＋New」の「Postgres」を選択
+2. 以下の設定項目を入力して「Create Database」をクリック
+    - Namee、Database、User:　お好みの名前
+    - PostgreSQL Version:　18推奨
+    - Compute：　$0/month　※Freeプラン　※30日間使用できます。
+3. PostgreSQLのSQL Shellを使用してテーブルを作成
+    - DB接続コマンド
+        - `\c [External Database URL]` 
+        - External Database URLは、Renderのダッシュボードから「info」→「Connect」→「External」を参照
+    - テーブル作成SQL
+        - `CREATE TABLE IF NOT EXISTS tasks(id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,name TEXT,finishedAt DATE,progress smallint DEFAULT 0 NOT NULL);`
+
+### 環境変数を設定
+apprication.propertiesのDB接続情報を環境変数で書き換えます。
+
+1. ダッシュボードから作成したアプリケーション（WEBサービス）を開き、「Environment」から「Environment Variables」の「Add variable」または「Edit」をクリック
+2. 以下のKEY・VALUEの組合せを登録して「Save, rebuild, and deploy」をクリック。デプロイは自動で行われます。 
+
+```text
+KEY				：VALUE
+SPRING_DATASOURCE_HOSTNAME	：DBのHostname
+SPRING_DATASOURCE_PORT		：DBのPort
+SPRING_DATASOURCE_DATABASE	：DBのDatabase
+PRING_DATASOURCE_USERNAME	：DBのUsername
+PRING_DATASOURCE_PASSWORD	：DBのPassword
+※VALUEの値はダッシュボードのDBサーバーのInfoにて確認してください。
 ```
+
 ### 設定
 接続するデータベース・ユーザー名・パスワードはapplication.propertiesにて変更できます。
 
