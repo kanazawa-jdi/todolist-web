@@ -11,9 +11,7 @@ Javaの再履修、フレームワーク（Spring Framework・SpringBoot）学�
 - 表示するタスクを　未完了・完了済・全て　の三種類に切り替えれます。
 - ユーザー関連の機能はありません。誰が閲覧しても全てのタスクが表示されます。
 
-![screenshot](imgs\home.png)
-![screenshot](imgs\detail.png)
-![screenshot](imgs\home.png)
+![screenshot](imgs/home.png)
 
 ## セットアップ
 Renderによるセットアップ方法は以下の通りです。
@@ -48,7 +46,7 @@ apprication.propertiesのDB接続情報を環境変数で書き換えます。
 2. 以下のKEY・VALUEの組合せを登録して「Save, rebuild, and deploy」をクリック。デプロイは自動で行われます。 
 
 ```text
-KEY				：VALUE
+KEY		    	    	    ：VALUE
 SPRING_DATASOURCE_HOSTNAME	：DBのHostname
 SPRING_DATASOURCE_PORT		：DBのPort
 SPRING_DATASOURCE_DATABASE	：DBのDatabase
