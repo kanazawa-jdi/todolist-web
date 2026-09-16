@@ -32,10 +32,13 @@ public class TasksDao extends BaseJdbcDao{
 	 * @param password
 	 */
 	public TasksDao(
-			@Value("${spring.datasource.url}") String url,
-			@Value("${spring.datasource.username}") String user,
-			@Value("${spring.datasource.password}") String password) {
-		super(url, user, password);
+			@Value("${spring.datasource.hostname:}") String hostname,
+			@Value("${spring.datasource.port:}") String port,
+			@Value("${spring.datasource.database:}") String database,
+			@Value("${spring.datasource.option:}") String option,
+			@Value("${spring.datasource.username:}") String user,
+			@Value("${spring.datasource.password:}") String password) {
+		super(hostname, port, database, option, user, password);
 	}
 	
 	
